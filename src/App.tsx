@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { supabase } from './lib/supabase';
 import { setUser } from './features/auth/authSlice';
@@ -14,19 +14,29 @@ import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Check active sessions and sets the user
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        dispatch(setUser({
-          id: session.user.id,
-          email: session.user.email!,
-          created_at: session.user.created_at,
-          updated_at: session.user.created_at,
-        }));
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          dispatch(setUser({
+            id: session.user.id,
+            email: session.user.email!,
+            created_at: session.user.created_at,
+            updated_at: session.user.created_at,
+          }));
+        }
+      } catch (error) {
+        console.error('Error checking auth session:', error);
+      } finally {
+        setIsLoading(false);
       }
-    });
+    };
+
+    initializeAuth();
 
     // Listen for auth changes
     const {
@@ -46,6 +56,16 @@ function App() {
 
     return () => subscription.unsubscribe();
   }, [dispatch]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-2xl font-semibold text-gray-700">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Router>
