@@ -1,0 +1,87 @@
+appName: TaskMaster
+description: >
+  ユーザーがタスクを管理・追跡できるシンプルなタスク管理アプリ。
+  ユーザー登録・認証、タスクのCRUD（作成、読み取り、更新、削除）機能、
+  タスクの分類・フィルタリング機能を提供。
+
+features:
+  authentication:
+    userRegistration:
+      description: メールアドレスとパスワードを使用した新規ユーザー登録
+    loginLogout:
+      description: 登録済みユーザーのログインとログアウト機能
+    passwordReset:
+      description: パスワードを忘れたユーザー向けのリセット機能
+    userProfileManagement:
+      description: ユーザーが自身のプロフィール情報を閲覧・編集できる
+  taskManagement:
+    createTask:
+      fields:
+        - title: "タイトル（必須）"
+        - description: "詳細説明（任意）"
+        - dueDate: "期限日（任意）"
+        - status: "ステータス（例: 未完了、進行中、完了）"
+        - priority: "優先度（例: 低、中、高）"
+      description: ユーザーが新しいタスクを作成できる
+    viewTasks:
+      description: ユーザーが自身のタスク一覧を閲覧できる
+      views:
+        - list: "リスト表示"
+        - detail: "詳細表示"
+    editTask:
+      description: 既存のタスクの情報を編集・更新できる
+    deleteTask:
+      description: 不要なタスクを削除できる
+    categorizeFilterTasks:
+      description: >
+        ステータスや優先度、期限日などでタスクをフィルタリング。
+        タグ機能を追加して、ユーザーがタスクにラベルを付けられるようにする
+  additionalFeatures:
+    realTimeUpdates:
+      description: Supabaseのリアルタイム機能を活用してタスクの変更をリアルタイムで反映
+    responsiveDesign:
+      description: モバイルおよびデスクトップ環境での快適な利用をサポート
+    darkMode:
+      description: ユーザーがテーマを切り替えられるオプションを提供
+
+nonFunctionalRequirements:
+  performance:
+    description: 高速なロード時間とスムーズなユーザーインターフェース
+  security:
+    description: ユーザーデータの保護、認証情報の安全な管理
+  scalability:
+    description: 将来的な機能追加やユーザー増加に対応可能な設計
+  accessibility:
+    description: ユーザーが使いやすいインターフェース設計（WCAG基準の一部を満たす）
+
+techStack:
+  frontend:
+    buildTool: Vite
+    framework: React
+    language: TypeScript
+    routing: React Router
+    stateManagement: "React Context / Redux（必要に応じて）"
+    styling: "Tailwind CSS / Styled Components"
+  backend:
+    platform: Supabase
+    services:
+      - database: PostgreSQL
+      - authentication: Supabase Auth
+      - realTime: SupabaseリアルタイムAPI
+      - storage: "必要に応じてファイルのアップロード機能を追加"
+  deployment:
+    platform: Vercel
+    ciCd: true
+    environmentVariables: "SupabaseのAPIキーなど"
+
+dataModel:
+  users:
+    description: ユーザー情報を管理するテーブル
+  profiles:
+    description: ユーザーの追加プロフィール情報を管理するテーブル
+  tasks:
+    description: タスク情報を管理するテーブル
+  tags:
+    description: タグ情報を管理するテーブル（オプション）
+  task_tags:
+    description: タスクとタグの関連情報を管理するテーブル（オプション）
